@@ -12,6 +12,8 @@ export default defineConfig({
 		rollupOptions: {
 			input: {
 				newtab: resolve(__dirname, "entrypoints/newtab.html"),
+				options: resolve(__dirname, "entrypoints/options.html"),
+				background: resolve(__dirname, "entrypoints/background.html"),
 			},
 		},
 	},

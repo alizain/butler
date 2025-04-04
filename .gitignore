@@ -11,6 +11,9 @@
 
 # production
 dist
+dist-zip
+web-ext-artifacts
+archive.zip
 
 # misc
 .DS_Store

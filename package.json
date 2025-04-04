@@ -8,7 +8,7 @@
 		"build": "tsc -b && vite build",
 		"preview": "vite preview",
 		"biome": "./node_modules/.bin/biome check --write",
-		"sign": "zip -r archive.zip . -i $(git ls-files) && ./node_modules/.bin/web-ext sign --channel=listed --source-dir=./dist --upload-source-code=./archive.zip --amo-metadata=./amo.metadata.json && rm archive.zip",
+		"sign": "zip -r archive.zip . -i $(git ls-files) && ./node_modules/.bin/web-ext sign --channel=listed --source-dir=./dist --upload-source-code=./archive.zip --amo-metadata=./amo.metadata.json",
 		"deploy": "npm run build && npm run sign"
 	},
 	"dependencies": {
