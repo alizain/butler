@@ -1,16 +1,42 @@
 {
-	"$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
-	"vcs": {
-		"enabled": true,
-		"clientKind": "git",
-		"useIgnoreFile": true
+	"assist": {
+		"actions": {
+			"source": {
+				"organizeImports": "on"
+			}
+		}
+	},
+	"css": {
+		"parser": {
+			"tailwindDirectives": true
+		}
+	},
+	"files": {
+		"ignoreUnknown": true,
+		"includes": [
+			"**",
+			"!!**/node_modules",
+			"!!**/dist",
+			"!!**/.turbo",
+			"!!**/.next",
+			"!!**/_build",
+			"!!**/deps",
+			"!!**/prior_art",
+			"!!**/priv/static"
+		]
 	},
 	"formatter": {
-		"useEditorconfig": true,
 		"attributePosition": "multiline",
 		"enabled": true,
 		"formatWithErrors": true,
-		"lineWidth": 90
+		"lineEnding": "auto",
+		"lineWidth": 90,
+		"useEditorconfig": true
+	},
+	"html": {
+		"formatter": {
+			"indentScriptAndStyle": true
+		}
 	},
 	"javascript": {
 		"formatter": {
@@ -31,10 +57,24 @@
 	"linter": {
 		"enabled": true,
 		"rules": {
-			"recommended": true
+			"correctness": {
+				"noUnknownProperty": "off"
+			},
+			"recommended": true,
+			"style": {
+				"useConst": "error",
+				"useImportType": "error"
+			},
+			"suspicious": {
+				"noExplicitAny": "warn",
+				"noUnknownAtRules": "off"
+			}
 		}
 	},
-	"organizeImports": {
-		"enabled": true
+	"overrides": [],
+	"vcs": {
+		"clientKind": "git",
+		"enabled": true,
+		"useIgnoreFile": true
 	}
 }

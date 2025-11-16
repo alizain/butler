@@ -1,13 +1,10 @@
 import "@/src/shared"
-import { render } from "solid-js/web"
-import { Dynamic } from "solid-js/web"
-import { YCAdvice } from "@/src/content/yc-advice"
+import { Dynamic, render } from "solid-js/web"
+import { DoingTheThing } from "@/src/content/doing-the-thing"
 import { NavalOnTinkering } from "@/src/content/naval-on-tinkering"
+import { YCAdvice } from "@/src/content/yc-advice"
 
-const CONTENT = [
-	YCAdvice,
-	NavalOnTinkering,
-]
+const CONTENT = [YCAdvice, NavalOnTinkering, DoingTheThing]
 
 function NewTab() {
 	const Content = CONTENT[Math.floor(Math.random() * CONTENT.length)]
