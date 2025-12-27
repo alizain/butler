@@ -1,9 +1,0 @@
-{
-	"summary": {
-		"en-US": "Puts YC's Advice on every new tab, and provides a button to copy all tabs in the current window."
-	},
-	"categories": ["other"],
-	"version": {
-		"license": "MIT"
-	}
-}

@@ -2,7 +2,8 @@
 	"assist": {
 		"actions": {
 			"source": {
-				"organizeImports": "on"
+				"organizeImports": "on",
+				"useSortedKeys": "on"
 			}
 		}
 	},
@@ -22,7 +23,9 @@
 			"!!**/_build",
 			"!!**/deps",
 			"!!**/prior_art",
-			"!!**/priv/static"
+			"!!**/priv/static",
+			"!!**/package-lock.json",
+			"!!**/worker-configuration.d.ts"
 		]
 	},
 	"formatter": {
