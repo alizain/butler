@@ -13,7 +13,7 @@ function Popup() {
 			await navigator.clipboard.writeText(content)
 			setTabCount(tabs.length)
 
-			setTimeout(() => window.close(), 5000)
+			setTimeout(() => window.close(), 2000)
 		} catch (e) {
 			setError(e instanceof Error ? e.message : "Failed to copy")
 		}

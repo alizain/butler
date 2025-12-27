@@ -1,4 +1,4 @@
-import { createMemo, For } from "solid-js"
+import { For } from "solid-js"
 
 const ADVICE = [
 	"Preparing to do the thing isn't doing the thing.",
@@ -20,15 +20,14 @@ function getRandomItems<T>(array: T[], count: number): T[] {
 }
 
 export function DoingTheThing() {
-	// Randomly select 2-3 items on each component mount
-	const randomCount = Math.floor(Math.random() * 2) + 2 // Random number between 2 and 3
-	const randomAdvice = createMemo(() => getRandomItems(ADVICE, randomCount))
+	const randomCount = Math.floor(Math.random() * 2) + 2
+	const randomAdvice = getRandomItems(ADVICE, randomCount)
 
 	return (
 		<div class="space-y-8">
 			<h1 class="text-lg font-300 text-gray-200 underline">Doing the Thing</h1>
 			<div class="space-y-4">
-				<For each={randomAdvice()}>
+				<For each={randomAdvice}>
 					{(advice) => <p class="text-lg font-300 text-gray-400">{advice}</p>}
 				</For>
 				<p class="text-lg font-bold text-gray-400">
