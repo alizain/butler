@@ -6,13 +6,17 @@
 			"48": "icons/copy-48.png",
 			"128": "icons/copy-128.png"
 		},
-		"default_popup": "entrypoints/popup.html",
 		"default_title": "Copy"
+	},
+	"background": {
+		"service_worker": "background.js",
+		"type": "module"
 	},
 	"chrome_url_overrides": {
 		"newtab": "entrypoints/newtab.html"
 	},
 	"description": "my personal things",
+	"host_permissions": ["https://chatgpt.com/*"],
 	"icons": {
 		"16": "icons/logo-16.png",
 		"32": "icons/logo-32.png",
@@ -24,6 +28,6 @@
 	"options_ui": {
 		"page": "entrypoints/options.html"
 	},
-	"permissions": ["tabs"],
-	"version": "2.0.6"
+	"permissions": ["tabs", "contextMenus", "scripting", "clipboardWrite", "offscreen"],
+	"version": "2.1.8"
 }

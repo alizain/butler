@@ -12,9 +12,19 @@ export default defineConfig({
 	build: {
 		rollupOptions: {
 			input: {
+				background: resolve(__dirname, "src/background.ts"),
 				newtab: resolve(__dirname, "entrypoints/newtab.html"),
+				offscreen: resolve(__dirname, "entrypoints/offscreen.html"),
 				options: resolve(__dirname, "entrypoints/options.html"),
-				popup: resolve(__dirname, "entrypoints/popup.html"),
+			},
+			output: {
+				entryFileNames: (chunkInfo) => {
+					// Background script needs to be at root level for manifest
+					if (chunkInfo.name === "background") {
+						return "background.js"
+					}
+					return "assets/[name]-[hash].js"
+				},
 			},
 		},
 	},
