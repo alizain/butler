@@ -25,6 +25,7 @@
 			"!!**/prior_art",
 			"!!**/priv/static",
 			"!!**/package-lock.json",
+			"!!public/*.svg",
 			"!!**/worker-configuration.d.ts"
 		]
 	},
@@ -63,7 +64,7 @@
 			"correctness": {
 				"noUnknownProperty": "off"
 			},
-			"recommended": true,
+			"preset": "recommended",
 			"style": {
 				"useConst": "error",
 				"useImportType": "error"

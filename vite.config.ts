@@ -10,7 +10,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 export default defineConfig({
 	base: "./",
 	build: {
-		rollupOptions: {
+		rolldownOptions: {
 			input: {
 				background: resolve(__dirname, "src/background.ts"),
 				newtab: resolve(__dirname, "entrypoints/newtab.html"),

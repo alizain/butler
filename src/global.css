@@ -5,8 +5,8 @@
 
 @theme inline {
 	--font-sans:
-		"Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
-		"Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+		"Plus Jakarta Sans Variable", ui-sans-serif, system-ui, sans-serif,
+		"Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 
 	--font-weight-100: 100;
 	--font-weight-200: 200;
