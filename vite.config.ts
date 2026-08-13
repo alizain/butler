@@ -7,24 +7,26 @@ import { extensionIcons } from "./vite-plugin-extension-icons"
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
+// The manifest references these by path, so they need stable, unhashed names at
+// the bundle root.
+const MANIFEST_ENTRIES = new Set(["background", "copy-on-select"])
+
 export default defineConfig({
 	base: "./",
 	build: {
 		rolldownOptions: {
 			input: {
 				background: resolve(__dirname, "src/background.ts"),
+				"copy-on-select": resolve(__dirname, "src/copy-on-select.ts"),
 				newtab: resolve(__dirname, "entrypoints/newtab.html"),
 				offscreen: resolve(__dirname, "entrypoints/offscreen.html"),
 				options: resolve(__dirname, "entrypoints/options.html"),
 			},
 			output: {
-				entryFileNames: (chunkInfo) => {
-					// Background script needs to be at root level for manifest
-					if (chunkInfo.name === "background") {
-						return "background.js"
-					}
-					return "assets/[name]-[hash].js"
-				},
+				entryFileNames: (chunkInfo) =>
+					MANIFEST_ENTRIES.has(chunkInfo.name)
+						? `${chunkInfo.name}.js`
+						: "assets/[name]-[hash].js",
 			},
 		},
 	},

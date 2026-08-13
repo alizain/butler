@@ -83,16 +83,25 @@ function copySelection() {
 // Selecting inside a field the user can type into is usually a prelude to
 // replacing the text, so copying there would destroy what they meant to paste.
 function selectionIsEditable(): boolean {
+	// Chrome reports anchorNode as BODY for input and textarea selections, so
+	// those are only observable through the focused element, and a shadow root
+	// hides the real field behind its host.
 	let el = document.activeElement
-	while (el?.shadowRoot?.activeElement) el = el.shadowRoot.activeElement
+	while (el?.shadowRoot?.activeElement) {
+		el = el.shadowRoot.activeElement
+	}
 
+	// Readonly fields are display surfaces for things like API keys and
+	// generated ids, and they can't lose data, so they should copy.
 	if (el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement) {
 		return !el.readOnly
 	}
-	if (el instanceof HTMLElement && el.isContentEditable) return true
 
+	// Everything else follows what is selected rather than what is focused. When
+	// focus sits in an editor but the selection is prose elsewhere, the prose is
+	// what the user asked for.
 	const node = document.getSelection()?.anchorNode
-	const anchor = node instanceof Element ? node : node?.parentElement
+	const anchor = node instanceof HTMLElement ? node : node?.parentElement
 	return anchor?.isContentEditable === true
 }
 ```
@@ -110,7 +119,7 @@ Both obvious approaches have holes, and the holes are in different places:
 - `activeElement` alone (Copy-On-Select's approach) **fails on shadow DOM** — a text input inside a web component reports the shadow *host*, so its contents get copied.
 - An `anchorNode` ancestor walk alone **fails on every `input`/`textarea`** — Chrome reports `anchorNode: BODY` for those selections.
 
-The union of both, with shadow piercing, passes every case. Validated with real mouse drags:
+So form fields are answered by the focused element, with shadow piercing, and everything else by the selection anchor. Validated with real mouse drags:
 
 | Case | Expected | Result |
 | --- | --- | --- |
@@ -135,11 +144,19 @@ The union of both, with shadow piercing, passes every case. Validated with real 
 Each was checked by finding the case that fails without it.
 
 - **Shadow-piercing loop** — without it, a text input inside a web component copies its contents.
-- **`activeElement` branch** — the only way to observe `input`/`textarea` selections, since `anchorNode` reports `BODY` for them.
-- **`anchorNode` branch** — the only way to catch a contenteditable whose focus sits on a non-editable wrapper, which is the shape ProseMirror and Slate use.
+- **`activeElement` branch** — the only way to observe `input`/`textarea` selections, since `anchorNode` reports `BODY` for them. It is scoped to form fields for exactly that reason and covers nothing else.
+- **`anchorNode` branch** — answers every remaining case, including a contenteditable whose focus sits on a non-editable wrapper, which is the shape ProseMirror and Slate use.
 - **`!el.readOnly`** — readonly fields are display surfaces for API keys and generated IDs. They cannot lose data, so they should copy.
 
-There is deliberately no `document.designMode === "on"` check. When designMode is on, `body.isContentEditable` becomes true and the `activeElement` branch already covers it. Verified.
+### Focus is not selection
+
+An earlier draft also tested `activeElement.isContentEditable`. It was removed, and the reason is worth recording because the branch looks protective.
+
+It is indistinguishable from the `anchorNode` branch across nineteen constructed cases, including selections dragged into and out of an editor. The single state where the two diverge is focus resting inside an editor while the selection sits in prose elsewhere, which a find-in-page match produces. There the extra branch skips the copy, and skipping is wrong: the user selected prose, so prose is what they asked for.
+
+The branch conflated two different concepts, *focus is in an editor* and *the selection is in an editor*. When they disagree the selection is the better signal. Form fields are the sole exception, and only because `anchorNode` reports `BODY` for them, leaving no alternative.
+
+There is likewise no `document.designMode === "on"` check. When designMode is on the selection's anchor reports `isContentEditable`, so the `anchorNode` branch already covers it. Verified.
 
 ### Why no input-type allowlist
 
@@ -198,3 +215,20 @@ The repository has no test infrastructure, and adding a framework for forty line
 - select inside a readonly field and confirm it copies
 - select inside an iframe
 - confirm an `http:` page no-ops without console noise
+
+### Results
+
+The detector passes all sixteen cases in the table above.
+
+End-to-end, with the built extension loaded into Chrome via `--load-extension`, driving real mouse input against a genuine `https` origin and reading the system clipboard back through `navigator.clipboard.readText()`. Each case seeds the clipboard with `SENTINEL` first, so an untouched clipboard proves the copy was skipped rather than merely empty.
+
+| Case | Expected | Clipboard afterwards |
+| --- | --- | --- |
+| prose drag | copy | `Alpha bravo charlie delta echo foxtr…` |
+| textarea drag | skip | `SENTINEL` |
+| contenteditable drag | skip | `SENTINEL` |
+| readonly input drag | copy | `READONLY-API-KEY-12345` |
+| triple-click | copy | full paragraph |
+| blank click | skip | `SENTINEL` |
+
+On `http:` the page reports `isSecureContext: false` and no `navigator.clipboard`, and the content script produces no console output. The extension service worker still registers, so the existing tab-copy feature is unaffected.
