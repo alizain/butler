@@ -83,7 +83,7 @@ hourly alarm, and right after an API key is saved
   → GET /nodes-export → index (live nodes only, plain-text names) → chrome.storage.local "outline"
 
 ⌘⇧O (the _execute_action command), toolbar icon, or tab menu "Send to Workflowy…" → popup
-  → node step: search the stored outline; ↓ ↑ highlight; → or a click takes a node
+  → node step: search the stored outline; ↓ ↑ highlight; → or a press on a match takes a node
   → note step: the text after the date pill
   → Enter (send) or Shift+Enter (send and open) from either step
       → sendMessage({ target, tabs, tabId, note, open }) to the service worker
@@ -155,7 +155,7 @@ The keyboard is one pure function, `keyAction(step, key)` in `src/popup-keys.ts`
 | node, note | Enter | send, then close the popup |
 | node, note | Shift+Enter | send, then open the new node in Workflowy |
 
-→ acts only at the end of the query because elsewhere it moves the caret, and that is where the caret is after typing. A click on a match does what → does. Sending takes the chosen node, else the highlighted match, else the first, and does nothing when there is no match. The highlight resets when the query changes, so a fresh query sends to its first match. The note is trimmed, and an empty note sends the date pill alone.
+→ acts only at the end of the query because elsewhere it moves the caret, and that is where the caret is after typing. A press on a match does what → does. It acts on pointerdown with the default prevented, so keyboard focus never leaves the search box, which points at the highlighted match through `aria-activedescendant`. Sending takes the chosen node, else the highlighted match, else the first, and does nothing when there is no match. The highlight resets when the query changes, so a fresh query sends to its first match. The note is trimmed, and an empty note sends the date pill alone.
 
 A send passes `{ target, tabs, tabId, note, open }` to the service worker and waits. The worker does the writes because the popup closes the moment focus leaves it. A rejected send rejects the popup's `sendMessage` (Chrome 148+), and the popup shows the error. A second send while one is running is ignored, because it would create a second batch.
 
@@ -170,7 +170,7 @@ A send passes `{ target, tabs, tabId, note, open }` to the service worker and wa
 
 A response that is not 2xx throws. A send of N tabs is 2N+1 requests.
 
-Steps 2 and 3 talk only to Workflowy and live in `src/workflowy.ts` as `sendTabs(apiKey, target, tabs, date, note)`. That file imports nothing from `chrome.*`, so it runs under Node and is tested against Workflowy's real behaviour without a fake Chrome. The date is computed on the Chrome side (`Temporal.Now.plainDateISO()`) and passed in, so `sendTabs` sends the same requests every time it gets the same input.
+Steps 2 and 3 talk only to Workflowy and live in `src/workflowy.ts` as `sendTabs({ apiKey, date, note, tabs, target })`, which takes one object because its arguments are mostly strings that would compile in any order. That file imports nothing from `chrome.*`, so it runs under Node and is tested against Workflowy's real behaviour without a fake Chrome. The date is computed on the Chrome side (`Temporal.Now.plainDateISO()`) and passed in, so `sendTabs` sends the same requests every time it gets the same input.
 
 ### Settings
 

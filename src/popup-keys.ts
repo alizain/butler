@@ -1,4 +1,4 @@
-export type KeyAction =
+type KeyAction =
 	| "highlight-next"
 	| "highlight-previous"
 	| "write-note"

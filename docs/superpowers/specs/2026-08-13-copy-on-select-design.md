@@ -1,5 +1,7 @@
 # Copy on select
 
+> Butler's tab-copy feature that this document mentions (copy-all-tabs, via an offscreen document) was retired on 2026-11-16 and replaced by the send-to-Workflowy popup; see [2026-11-15-send-tabs-to-workflowy-design.md](2026-11-15-send-tabs-to-workflowy-design.md).
+
 ## Goal
 
 Selecting text on a page copies it to the clipboard. Silent, always on, no settings.

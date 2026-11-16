@@ -17,7 +17,12 @@ export type SendRequest = {
 }
 
 export async function sendToWorkflowy({ note, open, tabId, tabs, target }: SendRequest) {
-	const today = Temporal.Now.plainDateISO().toString()
-	const batch = await sendTabs(await readApiKey(), target, tabs, today, note)
+	const batch = await sendTabs({
+		apiKey: await readApiKey(),
+		date: Temporal.Now.plainDateISO().toString(),
+		note,
+		tabs,
+		target,
+	})
 	if (open) await chrome.tabs.update(tabId, { url: deepLink(batch) })
 }

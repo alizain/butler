@@ -39,13 +39,21 @@ export async function createNode(apiKey: string, node: CreateNode): Promise<stri
 // child per tab: the tab's URL as a link, with its title beneath it. Returns the new
 // node's id. Every node gets its own request so it is stored the way a typed one is:
 // the API's multiline names would store the title as a paragraph rather than a bullet.
-export async function sendTabs(
-	apiKey: string,
-	target: string,
-	tabs: TabSummary[],
-	date: string,
-	note: string,
-): Promise<string> {
+export async function sendTabs({
+	apiKey,
+	date,
+	note,
+	tabs,
+	target,
+}: {
+	apiKey: string
+	// YYYY-MM-DD, which the API turns into a date pill.
+	date: string
+	note: string
+	tabs: TabSummary[]
+	// The node the tabs go under: its full id, short id or URL.
+	target: string
+}): Promise<string> {
 	const name = note ? `[${date}] ${note}` : `[${date}]`
 	const batch = await createNode(apiKey, { name, parent_id: target })
 	// One at a time: "bottom" keeps tab order only if each node lands after the last.

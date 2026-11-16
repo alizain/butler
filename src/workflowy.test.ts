@@ -98,13 +98,13 @@ test("sends tabs as a dated, noted node holding each tab's URL, with its title b
 		{ title: "Example A", url: "https://example.com/a" },
 		{ title: "Example B", url: "https://example.com/b" },
 	]
-	const batch = await sendTabs(
+	const batch = await sendTabs({
 		apiKey,
-		TEST_TARGET,
+		date: "2026-11-15",
+		note: "Reading for the trip",
 		tabs,
-		"2026-11-15",
-		"Reading for the trip",
-	)
+		target: TEST_TARGET,
+	})
 	const { node } = await callApi<{ node: WorkflowyNode }>(apiKey, `nodes/${batch}`)
 	const sent = outline(node, await children(batch))
 

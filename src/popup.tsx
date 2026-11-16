@@ -280,7 +280,7 @@ function ApiKey() {
 					</div>
 					<TextField.Description class={`text-[11px] ${MUTED}`}>
 						{saved()
-							? "Key saved. Search updates within a minute."
+							? "Key saved. Reopen in a minute to search."
 							: "Get yours at workflowy.com/api-key."}
 					</TextField.Description>
 				</TextField>
