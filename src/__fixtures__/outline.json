@@ -1,0 +1,225 @@
+[
+	{
+		"scope": "https://workflowy.com:443",
+		"method": "POST",
+		"path": "/api/v1/nodes",
+		"body": {
+			"name": "Ranking",
+			"parent_id": "49f181ed2ae5"
+		},
+		"status": 200,
+		"responseIsBinary": false,
+		"response": {
+			"item_id": "00000000-0000-0000-0000-000000000001"
+		}
+	},
+	{
+		"scope": "https://workflowy.com:443",
+		"method": "POST",
+		"path": "/api/v1/nodes",
+		"body": {
+			"name": "Keynotes",
+			"parent_id": "00000000-0000-0000-0000-000000000001",
+			"position": "bottom"
+		},
+		"status": 200,
+		"responseIsBinary": false,
+		"response": {
+			"item_id": "00000000-0000-0000-0000-000000000002"
+		}
+	},
+	{
+		"scope": "https://workflowy.com:443",
+		"method": "POST",
+		"path": "/api/v1/nodes",
+		"body": {
+			"name": "Notes on travel",
+			"parent_id": "00000000-0000-0000-0000-000000000001",
+			"position": "bottom"
+		},
+		"status": 200,
+		"responseIsBinary": false,
+		"response": {
+			"item_id": "00000000-0000-0000-0000-000000000003"
+		}
+	},
+	{
+		"scope": "https://workflowy.com:443",
+		"method": "POST",
+		"path": "/api/v1/nodes",
+		"body": {
+			"name": "Travel notes",
+			"parent_id": "00000000-0000-0000-0000-000000000001",
+			"position": "bottom"
+		},
+		"status": 200,
+		"responseIsBinary": false,
+		"response": {
+			"item_id": "00000000-0000-0000-0000-000000000004"
+		}
+	},
+	{
+		"scope": "https://workflowy.com:443",
+		"method": "POST",
+		"path": "/api/v1/nodes",
+		"body": {
+			"name": "My notes",
+			"parent_id": "00000000-0000-0000-0000-000000000004"
+		},
+		"status": 200,
+		"responseIsBinary": false,
+		"response": {
+			"item_id": "00000000-0000-0000-0000-000000000005"
+		}
+	},
+	{
+		"scope": "https://workflowy.com:443",
+		"method": "POST",
+		"path": "/api/v1/nodes",
+		"body": {
+			"name": "Completed notes",
+			"parent_id": "00000000-0000-0000-0000-000000000001",
+			"position": "bottom"
+		},
+		"status": 200,
+		"responseIsBinary": false,
+		"response": {
+			"item_id": "00000000-0000-0000-0000-000000000006"
+		}
+	},
+	{
+		"scope": "https://workflowy.com:443",
+		"method": "POST",
+		"path": "/api/v1/nodes",
+		"body": {
+			"name": "Notes under a completed node",
+			"parent_id": "00000000-0000-0000-0000-000000000006"
+		},
+		"status": 200,
+		"responseIsBinary": false,
+		"response": {
+			"item_id": "00000000-0000-0000-0000-000000000007"
+		}
+	},
+	{
+		"scope": "https://workflowy.com:443",
+		"method": "POST",
+		"path": "/api/v1/nodes/00000000-0000-0000-0000-000000000006/complete",
+		"body": "",
+		"status": 200,
+		"responseIsBinary": false,
+		"response": {
+			"status": "ok"
+		}
+	},
+	{
+		"scope": "https://workflowy.com:443",
+		"method": "GET",
+		"path": "/api/v1/nodes-export",
+		"body": "",
+		"status": 200,
+		"responseIsBinary": false,
+		"response": {
+			"nodes": [
+				{
+					"id": "00000000-0000-0000-0000-000000000005",
+					"name": "My notes",
+					"note": null,
+					"parent_id": "00000000-0000-0000-0000-000000000004",
+					"priority": 100,
+					"completed": false,
+					"data": {
+						"layoutMode": "bullets"
+					},
+					"createdAt": 1794838203,
+					"modifiedAt": 1794838203,
+					"completedAt": null
+				},
+				{
+					"id": "00000000-0000-0000-0000-000000000006",
+					"name": "Completed notes",
+					"note": null,
+					"parent_id": "00000000-0000-0000-0000-000000000001",
+					"priority": 400,
+					"completed": true,
+					"data": {
+						"layoutMode": "bullets"
+					},
+					"createdAt": 1794838204,
+					"modifiedAt": 1794838204,
+					"completedAt": 1794838204
+				},
+				{
+					"id": "00000000-0000-0000-0000-000000000001",
+					"name": "Ranking",
+					"note": null,
+					"parent_id": null,
+					"priority": 100,
+					"completed": false,
+					"data": {
+						"layoutMode": "bullets"
+					},
+					"createdAt": 1794838203,
+					"modifiedAt": 1794838203,
+					"completedAt": null
+				},
+				{
+					"id": "00000000-0000-0000-0000-000000000002",
+					"name": "Keynotes",
+					"note": null,
+					"parent_id": "00000000-0000-0000-0000-000000000001",
+					"priority": 100,
+					"completed": false,
+					"data": {
+						"layoutMode": "bullets"
+					},
+					"createdAt": 1794838203,
+					"modifiedAt": 1794838203,
+					"completedAt": null
+				},
+				{
+					"id": "00000000-0000-0000-0000-000000000003",
+					"name": "Notes on travel",
+					"note": null,
+					"parent_id": "00000000-0000-0000-0000-000000000001",
+					"priority": 200,
+					"completed": false,
+					"data": {
+						"layoutMode": "bullets"
+					},
+					"createdAt": 1794838203,
+					"modifiedAt": 1794838203,
+					"completedAt": null
+				},
+				{
+					"id": "00000000-0000-0000-0000-000000000004",
+					"name": "Travel notes",
+					"note": null,
+					"parent_id": "00000000-0000-0000-0000-000000000001",
+					"priority": 300,
+					"completed": false,
+					"data": {
+						"layoutMode": "bullets"
+					},
+					"createdAt": 1794838203,
+					"modifiedAt": 1794838203,
+					"completedAt": null
+				},
+				{
+					"id": "00000000-0000-0000-0000-000000000007",
+					"name": "Notes under a completed node",
+					"note": null,
+					"parent_id": "00000000-0000-0000-0000-000000000006",
+					"priority": 100,
+					"completed": false,
+					"data": {
+						"layoutMode": "bullets"
+					},
+					"createdAt": 1794838204,
+					"modifiedAt": 1794838204,
+					"completedAt": null
+				}
+			]
+		}
+	}
+]

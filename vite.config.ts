@@ -1,3 +1,4 @@
+/// <reference types="vitest/config" />
 import { dirname, resolve } from "node:path"
 import { fileURLToPath } from "node:url"
 import tailwindcss from "@tailwindcss/vite"
@@ -19,8 +20,7 @@ export default defineConfig({
 				background: resolve(__dirname, "src/background.ts"),
 				"copy-on-select": resolve(__dirname, "src/copy-on-select.ts"),
 				newtab: resolve(__dirname, "entrypoints/newtab.html"),
-				offscreen: resolve(__dirname, "entrypoints/offscreen.html"),
-				options: resolve(__dirname, "entrypoints/options.html"),
+				popup: resolve(__dirname, "entrypoints/popup.html"),
 			},
 			output: {
 				entryFileNames: (chunkInfo) =>
@@ -33,12 +33,16 @@ export default defineConfig({
 	plugins: [
 		solid(),
 		tailwindcss(),
-		extensionIcons(resolve(__dirname, "public/copy.svg")),
 		extensionIcons(resolve(__dirname, "public/logo.svg")),
 	],
 	resolve: {
 		alias: {
 			"@": fileURLToPath(new URL("./", import.meta.url)),
 		},
+	},
+	// The tests render nothing, so they run in Node. Left unset, the Solid plugin makes
+	// vitest require a DOM environment.
+	test: {
+		environment: "node",
 	},
 })

@@ -25,6 +25,7 @@
 			"!!**/prior_art",
 			"!!**/priv/static",
 			"!!**/package-lock.json",
+			"!!**/__fixtures__",
 			"!!public/*.svg",
 			"!!**/worker-configuration.d.ts"
 		]

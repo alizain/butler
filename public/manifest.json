@@ -1,12 +1,13 @@
 {
 	"action": {
 		"default_icon": {
-			"16": "icons/copy-16.png",
-			"32": "icons/copy-32.png",
-			"48": "icons/copy-48.png",
-			"128": "icons/copy-128.png"
+			"16": "icons/logo-16.png",
+			"32": "icons/logo-32.png",
+			"48": "icons/logo-48.png",
+			"128": "icons/logo-128.png"
 		},
-		"default_title": "Copy"
+		"default_popup": "entrypoints/popup.html",
+		"default_title": "Send to Workflowy"
 	},
 	"background": {
 		"service_worker": "background.js",
@@ -14,6 +15,14 @@
 	},
 	"chrome_url_overrides": {
 		"newtab": "entrypoints/newtab.html"
+	},
+	"commands": {
+		"_execute_action": {
+			"suggested_key": {
+				"default": "Ctrl+Shift+O",
+				"mac": "Command+Shift+O"
+			}
+		}
 	},
 	"content_scripts": [
 		{
@@ -24,6 +33,7 @@
 		}
 	],
 	"description": "my personal things",
+	"host_permissions": ["https://workflowy.com/*"],
 	"icons": {
 		"16": "icons/logo-16.png",
 		"32": "icons/logo-32.png",
@@ -32,9 +42,6 @@
 	},
 	"manifest_version": 3,
 	"name": "butler",
-	"options_ui": {
-		"page": "entrypoints/options.html"
-	},
-	"permissions": ["tabs", "clipboardWrite", "offscreen"],
-	"version": "2.1.8"
+	"permissions": ["tabs", "clipboardWrite", "contextMenus", "storage", "alarms"],
+	"version": "3.0.0"
 }

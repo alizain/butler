@@ -1,0 +1,212 @@
+[
+	{
+		"scope": "https://workflowy.com:443",
+		"method": "POST",
+		"path": "/api/v1/nodes",
+		"body": {
+			"name": "[2026-11-15] Reading for the trip",
+			"parent_id": "49f181ed2ae5"
+		},
+		"status": 200,
+		"responseIsBinary": false,
+		"response": {
+			"item_id": "00000000-0000-0000-0000-000000000001"
+		}
+	},
+	{
+		"scope": "https://workflowy.com:443",
+		"method": "POST",
+		"path": "/api/v1/nodes",
+		"body": {
+			"name": "<a href=\"https://example.com/a\">https://example.com/a</a>",
+			"parent_id": "00000000-0000-0000-0000-000000000001",
+			"position": "bottom"
+		},
+		"status": 200,
+		"responseIsBinary": false,
+		"response": {
+			"item_id": "00000000-0000-0000-0000-000000000002"
+		}
+	},
+	{
+		"scope": "https://workflowy.com:443",
+		"method": "POST",
+		"path": "/api/v1/nodes",
+		"body": {
+			"name": "Example A",
+			"parent_id": "00000000-0000-0000-0000-000000000002"
+		},
+		"status": 200,
+		"responseIsBinary": false,
+		"response": {
+			"item_id": "00000000-0000-0000-0000-000000000003"
+		}
+	},
+	{
+		"scope": "https://workflowy.com:443",
+		"method": "POST",
+		"path": "/api/v1/nodes",
+		"body": {
+			"name": "<a href=\"https://example.com/b\">https://example.com/b</a>",
+			"parent_id": "00000000-0000-0000-0000-000000000001",
+			"position": "bottom"
+		},
+		"status": 200,
+		"responseIsBinary": false,
+		"response": {
+			"item_id": "00000000-0000-0000-0000-000000000004"
+		}
+	},
+	{
+		"scope": "https://workflowy.com:443",
+		"method": "POST",
+		"path": "/api/v1/nodes",
+		"body": {
+			"name": "Example B",
+			"parent_id": "00000000-0000-0000-0000-000000000004"
+		},
+		"status": 200,
+		"responseIsBinary": false,
+		"response": {
+			"item_id": "00000000-0000-0000-0000-000000000005"
+		}
+	},
+	{
+		"scope": "https://workflowy.com:443",
+		"method": "GET",
+		"path": "/api/v1/nodes/00000000-0000-0000-0000-000000000001",
+		"body": "",
+		"status": 200,
+		"responseIsBinary": false,
+		"response": {
+			"node": {
+				"id": "00000000-0000-0000-0000-000000000001",
+				"name": "<time startYear=\"2026\" startMonth=\"11\" startDay=\"15\">Sun, Nov 15, 2026</time> Reading for the trip",
+				"note": null,
+				"parent_id": "00000000-0000-0000-0000-000000000006",
+				"priority": 50,
+				"completed": false,
+				"data": {
+					"layoutMode": "bullets"
+				},
+				"createdAt": 1794841510,
+				"modifiedAt": 1794841510,
+				"completedAt": null
+			}
+		}
+	},
+	{
+		"scope": "https://workflowy.com:443",
+		"method": "GET",
+		"path": "/api/v1/nodes?parent_id=00000000-0000-0000-0000-000000000001",
+		"body": "",
+		"status": 200,
+		"responseIsBinary": false,
+		"response": {
+			"nodes": [
+				{
+					"id": "00000000-0000-0000-0000-000000000002",
+					"name": "<a href=\"https://example.com/a\">https://example.com/a</a>",
+					"note": null,
+					"parent_id": "00000000-0000-0000-0000-000000000001",
+					"priority": 100,
+					"completed": false,
+					"data": {
+						"layoutMode": "bullets"
+					},
+					"createdAt": 1794841510,
+					"modifiedAt": 1794841510,
+					"completedAt": null
+				},
+				{
+					"id": "00000000-0000-0000-0000-000000000004",
+					"name": "<a href=\"https://example.com/b\">https://example.com/b</a>",
+					"note": null,
+					"parent_id": "00000000-0000-0000-0000-000000000001",
+					"priority": 200,
+					"completed": false,
+					"data": {
+						"layoutMode": "bullets"
+					},
+					"createdAt": 1794841510,
+					"modifiedAt": 1794841510,
+					"completedAt": null
+				}
+			]
+		}
+	},
+	{
+		"scope": "https://workflowy.com:443",
+		"method": "GET",
+		"path": "/api/v1/nodes?parent_id=00000000-0000-0000-0000-000000000002",
+		"body": "",
+		"status": 200,
+		"responseIsBinary": false,
+		"response": {
+			"nodes": [
+				{
+					"id": "00000000-0000-0000-0000-000000000003",
+					"name": "Example A",
+					"note": null,
+					"parent_id": "00000000-0000-0000-0000-000000000002",
+					"priority": 100,
+					"completed": false,
+					"data": {
+						"layoutMode": "bullets"
+					},
+					"createdAt": 1794841510,
+					"modifiedAt": 1794841510,
+					"completedAt": null
+				}
+			]
+		}
+	},
+	{
+		"scope": "https://workflowy.com:443",
+		"method": "GET",
+		"path": "/api/v1/nodes?parent_id=00000000-0000-0000-0000-000000000003",
+		"body": "",
+		"status": 200,
+		"responseIsBinary": false,
+		"response": {
+			"nodes": []
+		}
+	},
+	{
+		"scope": "https://workflowy.com:443",
+		"method": "GET",
+		"path": "/api/v1/nodes?parent_id=00000000-0000-0000-0000-000000000004",
+		"body": "",
+		"status": 200,
+		"responseIsBinary": false,
+		"response": {
+			"nodes": [
+				{
+					"id": "00000000-0000-0000-0000-000000000005",
+					"name": "Example B",
+					"note": null,
+					"parent_id": "00000000-0000-0000-0000-000000000004",
+					"priority": 100,
+					"completed": false,
+					"data": {
+						"layoutMode": "bullets"
+					},
+					"createdAt": 1794841510,
+					"modifiedAt": 1794841510,
+					"completedAt": null
+				}
+			]
+		}
+	},
+	{
+		"scope": "https://workflowy.com:443",
+		"method": "GET",
+		"path": "/api/v1/nodes?parent_id=00000000-0000-0000-0000-000000000005",
+		"body": "",
+		"status": 200,
+		"responseIsBinary": false,
+		"response": {
+			"nodes": []
+		}
+	}
+]
