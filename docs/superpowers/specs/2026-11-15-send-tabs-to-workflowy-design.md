@@ -178,7 +178,7 @@ The popup's second section has one masked field, **Workflowy API key** (from htt
 
 ## Files changed
 
-- **`public/manifest.json`**: the action gets `default_popup` and the logo icon, and `commands._execute_action` suggests ⌘⇧O (Ctrl+Shift+O elsewhere) for opening it. Permissions add `contextMenus`, `storage` and `alarms`, and drop `offscreen`. `clipboardWrite` stays because copy-on-select relies on it. `host_permissions` adds `https://workflowy.com/*` so the worker can call the API.
+- **`public/manifest.json`**: the action gets `default_popup` and the mug-hot icon (`public/mug-hot.svg`, Font Awesome Pro Slab Regular), and `commands._execute_action` suggests ⌘⇧O (Ctrl+Shift+O elsewhere) for opening it. Permissions add `contextMenus`, `storage` and `alarms`, and drop `offscreen`. `clipboardWrite` stays because copy-on-select relies on it. `host_permissions` adds `https://workflowy.com/*` so the worker can call the API.
 - **`src/background.ts`**: only wiring now: the tab-menu item, `openPopup` on its click, the export alarm, and the popup's send request.
 - **`src/popup.tsx`** and **`entrypoints/popup.html`** (new): the popup, with both sections.
 - **`src/popup-keys.ts`** (new): the popup's keyboard as one pure function, with its test beside it.
@@ -188,6 +188,7 @@ The popup's second section has one masked field, **Workflowy API key** (from htt
 - **`src/tabs.ts`** (new): `TabSummary` and `summarizeTabs`, moved out of `src/background.ts`.
 - **`src/workflowy-settings.ts`** (new): the API key in `chrome.storage.local`.
 - **Deleted, the options page:** `src/options.tsx`, `entrypoints/options.html`, the manifest's `options_ui` and its build input. The API key lives in the popup instead.
+- **`vite-plugin-extension-icons.ts`**: resizes with `fit: "contain"` on a transparent background, so a non-square icon such as mug-hot (504×540) is padded to the square instead of cropped.
 - **Deleted with copy-all-tabs:** `src/offscreen.ts`, `entrypoints/offscreen.html`, `public/copy.svg`, and the toolbar click handler, clipboard and offscreen code in `src/background.ts`.
 - **`package.json`**: `fuse.js` and `@kobalte/core`, plus vitest, nock and a `test` script.
 

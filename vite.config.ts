@@ -34,6 +34,7 @@ export default defineConfig({
 		solid(),
 		tailwindcss(),
 		extensionIcons(resolve(__dirname, "public/logo.svg")),
+		extensionIcons(resolve(__dirname, "public/mug-hot.svg")),
 	],
 	resolve: {
 		alias: {
