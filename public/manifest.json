@@ -25,7 +25,10 @@
 		},
 		"open-links": {
 			"description": "Open links from Workflowy",
-			"suggested_key": { "mac": "Command+Shift+I" }
+			"suggested_key": {
+				"default": "Ctrl+Shift+P",
+				"mac": "Command+Shift+P"
+			}
 		}
 	},
 	"content_scripts": [
