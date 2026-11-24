@@ -16,9 +16,8 @@ import {
 	readOutline,
 	scheduleOutlineExports,
 } from "@/src/outline"
-import { keyAction } from "@/src/popup-keys"
 import type { SendRequest } from "@/src/send-to-workflowy"
-import { summarizeTabs } from "@/src/tabs"
+import { type OpenLinksRequest, summarizeTabs } from "@/src/tabs"
 import { readApiKey, writeApiKey } from "@/src/workflowy-settings"
 
 const BOX = "rounded-md border border-gray-200 px-3 py-2 dark:border-slate-700"
@@ -49,43 +48,131 @@ function MatchText(props: { match: OutlineMatch }) {
 	)
 }
 
-function SendTabs(props: { windowTabs: chrome.tabs.Tab[] }) {
+function NodePicker(props: {
+	linksOnly?: boolean
+	onChoose: (match: OutlineMatch) => void
+}) {
 	const [outline] = createResource(readOutline)
 	const search = createMemo(() => {
 		const entries = outline()
-		return entries && createOutlineSearch(entries)
+		return entries && createOutlineSearch(entries, props.linksOnly)
 	})
 	const [query, setQuery] = createSignal("")
-	// -1 while no match is highlighted, when sending picks the first match.
-	const [highlighted, setHighlighted] = createSignal(-1)
-	// Set once a node is chosen, which moves the popup from the node step to the note step.
-	const [target, setTarget] = createSignal<OutlineMatch>()
-	const [note, setNote] = createSignal("")
-	const [sending, setSending] = createSignal(false)
-	const [error, setError] = createSignal("")
+	const [highlighted, setHighlighted] = createSignal(0)
 	// An empty query matches every node, so nothing is searched until something is typed.
 	const matches = createMemo(() => {
 		const find = search()
 		return find && query().trim() ? find(query()) : []
 	})
-	const chosen = () => target() ?? matches()[highlighted()] ?? matches()[0]
-	const selected = () => props.windowTabs.filter((tab) => tab.highlighted)
-
 	createEffect(() => {
 		document
 			.getElementById(`match-${highlighted()}`)
 			?.scrollIntoView({ block: "nearest" })
 	})
 
-	async function send(open: boolean) {
-		const match = chosen()
-		// A second send while the first runs would create a second batch.
-		if (!match || sending()) return
-		const active = props.windowTabs.find((tab) => tab.active) as chrome.tabs.Tab
+	function navigateResults(event: KeyboardEvent) {
+		const results = matches()
+		if (!results.length) return
+		switch (event.key) {
+			case "ArrowDown":
+				setHighlighted((index) => Math.min(index + 1, results.length - 1))
+				break
+			case "ArrowUp":
+				setHighlighted((index) => Math.max(index - 1, 0))
+				break
+			case "Enter":
+				props.onChoose(results[highlighted()])
+				break
+			default:
+				return
+		}
+		event.preventDefault()
+	}
+
+	return (
+		<>
+			<TextField
+				onChange={(value) => {
+					setQuery(value)
+					setHighlighted(0)
+				}}
+				value={query()}
+			>
+				<TextField.Input
+					aria-activedescendant={
+						matches().length > 0 ? `match-${highlighted()}` : undefined
+					}
+					aria-autocomplete="list"
+					aria-controls="matches"
+					aria-expanded={matches().length > 0}
+					aria-label="Workflowy node"
+					class={`w-full ${INPUT}`}
+					onKeyDown={navigateResults}
+					placeholder="Find a Workflowy node"
+					ref={focusSoon}
+					role="combobox"
+				/>
+			</TextField>
+			{/* Matches scroll here so the API key section is never pushed out of view. */}
+			{/* Keyboard focus stays in the search box, which points at the highlighted match
+						    through aria-activedescendant; a press on a match is handled on pointerdown with
+						    the default prevented, so the search box never loses focus to it. */}
+			<div
+				class="-mx-2 flex max-h-80 flex-col overflow-y-auto"
+				id="matches"
+				role="listbox"
+			>
+				<For each={matches()}>
+					{(match, index) => (
+						<div
+							aria-selected={index() === highlighted()}
+							class="flex cursor-default flex-col gap-0.5 rounded-md px-2 py-1.5 aria-selected:bg-gray-100 dark:aria-selected:bg-slate-800"
+							id={`match-${index()}`}
+							onPointerDown={(event) => {
+								event.preventDefault()
+								props.onChoose(match)
+							}}
+							onPointerMove={() => setHighlighted(index())}
+							role="option"
+							tabIndex={-1}
+						>
+							<MatchText match={match} />
+							<Show when={props.linksOnly}>
+								<div class={MUTED}>
+									{match.openUrls.length}{" "}
+									{match.openUrls.length === 1 ? "link" : "links"}
+								</div>
+							</Show>
+						</div>
+					)}
+				</For>
+			</div>
+			<Show when={outline() && query().trim() && matches().length === 0}>
+				<p class={MUTED}>No matching node</p>
+			</Show>
+			<Show when={outline.state === "ready" && !outline()}>
+				<p class={MUTED}>
+					Search isn't ready yet. Save your API key below, then reopen this
+					popup.
+				</p>
+			</Show>
+		</>
+	)
+}
+
+function SendTabs(props: { windowTabs: chrome.tabs.Tab[] }) {
+	// Set once a node is chosen, which moves the popup from the node step to the note step.
+	const [target, setTarget] = createSignal<OutlineMatch>()
+	const [note, setNote] = createSignal("")
+	const [sending, setSending] = createSignal(false)
+	const [error, setError] = createSignal("")
+	const selected = () => props.windowTabs.filter((tab) => tab.highlighted)
+
+	async function send(event: SubmitEvent, match: OutlineMatch) {
+		event.preventDefault()
+		if (sending()) return
 		const request: SendRequest = {
 			note: note().trim(),
-			open,
-			tabId: active.id as number,
 			tabs: summarizeTabs(selected()),
 			target: match.id,
 		}
@@ -99,98 +186,20 @@ function SendTabs(props: { windowTabs: chrome.tabs.Tab[] }) {
 		}
 	}
 
-	function act(event: KeyboardEvent & { currentTarget: HTMLInputElement }) {
-		const input = event.currentTarget
-		const action = keyAction(target() ? "note" : "node", {
-			caretAtEnd: input.selectionStart === input.value.length,
-			name: event.key,
-			shift: event.shiftKey,
-		})
-		if (!action) return
-		event.preventDefault()
-		if (action === "highlight-next") {
-			setHighlighted((index) => Math.min(index + 1, matches().length - 1))
-		} else if (action === "highlight-previous") {
-			setHighlighted((index) => Math.max(index - 1, 0))
-		} else if (action === "write-note") {
-			setTarget(chosen())
-		} else {
-			send(action === "send-and-open")
-		}
-	}
-
 	return (
 		<section class="flex flex-col gap-3 p-4">
 			<h1 class="font-semibold">
 				Send {selected().length} of {props.windowTabs.length} tabs
 			</h1>
 			<Show
-				fallback={
-					<>
-						<TextField
-							disabled={sending()}
-							onChange={(value) => {
-								setQuery(value)
-								setHighlighted(-1)
-							}}
-							value={query()}
-						>
-							<TextField.Input
-								aria-activedescendant={
-									highlighted() >= 0
-										? `match-${highlighted()}`
-										: undefined
-								}
-								aria-autocomplete="list"
-								aria-controls="matches"
-								aria-expanded={matches().length > 0}
-								aria-label="Workflowy node"
-								class={`w-full ${INPUT}`}
-								onKeyDown={act}
-								placeholder="Find a Workflowy node"
-								ref={focusSoon}
-								role="combobox"
-							/>
-						</TextField>
-						{/* Matches scroll here so the API key section is never pushed out of view. */}
-						{/* Keyboard focus stays in the search box, which points at the highlighted match
-						    through aria-activedescendant; a press on a match is handled on pointerdown with
-						    the default prevented, so the search box never loses focus to it. */}
-						<div
-							class="-mx-2 flex max-h-80 flex-col overflow-y-auto"
-							id="matches"
-							role="listbox"
-						>
-							<For each={matches()}>
-								{(match, index) => (
-									<div
-										aria-selected={index() === highlighted()}
-										class="flex cursor-default flex-col gap-0.5 rounded-md px-2 py-1.5 aria-selected:bg-gray-100 dark:aria-selected:bg-slate-800"
-										id={`match-${index()}`}
-										onPointerDown={(event) => {
-											event.preventDefault()
-											setTarget(match)
-										}}
-										onPointerMove={() => setHighlighted(index())}
-										role="option"
-										tabIndex={-1}
-									>
-										<MatchText match={match} />
-									</div>
-								)}
-							</For>
-						</div>
-						<Show
-							when={outline() && query().trim() && matches().length === 0}
-						>
-							<p class={MUTED}>No matching node</p>
-						</Show>
-					</>
-				}
+				fallback={<NodePicker onChoose={setTarget} />}
 				when={target()}
 			>
 				{(node) => (
-					<>
+					<form
+						class="flex flex-col gap-3"
+						onSubmit={(event) => send(event, node())}
+					>
 						<div
 							class={`flex flex-col gap-0.5 rounded-md px-2 py-1.5 ${HIGHLIGHT}`}
 						>
@@ -212,23 +221,53 @@ function SendTabs(props: { windowTabs: chrome.tabs.Tab[] }) {
 								<TextField.Input
 									aria-label="Note after the date"
 									class="min-w-0 flex-1 bg-transparent placeholder:text-gray-400 focus:outline-none dark:placeholder:text-slate-500"
-									onKeyDown={act}
 									placeholder="Add a note"
 									ref={focusSoon}
 								/>
 							</div>
 						</TextField>
-					</>
+					</form>
 				)}
-			</Show>
-			<Show when={outline.state === "ready" && !outline()}>
-				<p class={MUTED}>
-					Search isn't ready yet. Save your API key below, then reopen this
-					popup.
-				</p>
 			</Show>
 			<Show when={sending()}>
 				<p class={MUTED}>Sending…</p>
+			</Show>
+			<Show when={error()}>
+				<p class="text-red-600 dark:text-red-400">{error()}</p>
+			</Show>
+		</section>
+	)
+}
+
+function OpenLinks(props: { windowId: number }) {
+	const [opening, setOpening] = createSignal(false)
+	const [error, setError] = createSignal("")
+
+	async function open(match: OutlineMatch) {
+		if (opening()) return
+		setOpening(true)
+		try {
+			const request: OpenLinksRequest = {
+				urls: match.openUrls,
+				windowId: props.windowId,
+			}
+			await chrome.runtime.sendMessage(request)
+			window.close()
+		} catch (failure) {
+			setError(String(failure))
+			setOpening(false)
+		}
+	}
+
+	return (
+		<section class="flex flex-col gap-3 p-4">
+			<h1 class="font-semibold">Open links</h1>
+			<NodePicker
+				linksOnly
+				onChoose={open}
+			/>
+			<Show when={opening()}>
+				<p class={MUTED}>Opening…</p>
 			</Show>
 			<Show when={error()}>
 				<p class="text-red-600 dark:text-red-400">{error()}</p>
@@ -295,7 +334,13 @@ function Popup() {
 	return (
 		<main class="flex w-sm flex-col text-xs">
 			<Show when={tabs()}>
-				{(windowTabs) => <SendTabs windowTabs={windowTabs()} />}
+				{(windowTabs) =>
+					location.hash === "#open-links" ? (
+						<OpenLinks windowId={windowTabs()[0].windowId} />
+					) : (
+						<SendTabs windowTabs={windowTabs()} />
+					)
+				}
 			</Show>
 			<ApiKey />
 		</main>

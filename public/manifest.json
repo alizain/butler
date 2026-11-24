@@ -22,6 +22,10 @@
 				"default": "Ctrl+Shift+O",
 				"mac": "Command+Shift+O"
 			}
+		},
+		"open-links": {
+			"description": "Open links from Workflowy",
+			"suggested_key": { "mac": "Command+Shift+I" }
 		}
 	},
 	"content_scripts": [
@@ -43,5 +47,5 @@
 	"manifest_version": 3,
 	"name": "butler",
 	"permissions": ["tabs", "clipboardWrite", "contextMenus", "storage", "alarms"],
-	"version": "3.0.0"
+	"version": "3.1.0"
 }

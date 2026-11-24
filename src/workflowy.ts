@@ -73,6 +73,7 @@ export type ExportedNode = {
 	completed: boolean
 	id: string
 	name: string
+	note: string | null
 	parent_id: string | null
 	// The order among siblings: lower comes first.
 	priority: number
@@ -82,9 +83,4 @@ export type ExportedNode = {
 export async function exportNodes(apiKey: string): Promise<ExportedNode[]> {
 	const { nodes } = await callApi<{ nodes: ExportedNode[] }>(apiKey, "nodes-export")
 	return nodes
-}
-
-// Opens the node in the desktop app. A node's short id is the last 12 characters of its id.
-export function deepLink(id: string): string {
-	return `workflowy://workflowy.com/#/${id.slice(-12)}`
 }

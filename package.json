@@ -5,6 +5,8 @@
 		"@tailwindcss/typography": "^0.5.20",
 		"@tailwindcss/vite": "^4.3.2",
 		"fuse.js": "^7.5.0",
+		"linkifyjs": "^4.4.0",
+		"parse5": "^7.3.0",
 		"solid-js": "^1.9.14",
 		"tailwindcss": "^4.3.2",
 		"tailwindcss-animate": "^1.0.7"
@@ -31,5 +33,5 @@
 		"test": "vitest run"
 	},
 	"type": "module",
-	"version": "3.0.0"
+	"version": "3.1.0"
 }
